@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mapper.UserMapper">
+
+
+    <select id="findTotalCount" resultType="Integer" parameterType="cn.po.User">
+        select count (*) from user
+        <where>
+            <if test="name != null">
+                and name = #{name},
+            </if>
+            <if test="address != null">
+                and address = #{address},
+            </if>
+            <if test="email != null">
+                and email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByPage" resultType="cn.po.User">
+        select * from user
+        <where>
+            <if test="user.name != null ">
+                and name = #{user.name}
+            </if>
+            <if test="user.address != null">
+                and address = #{user.address}
+            </if>
+            <if test="user.email != null">
+                and email = #{user.email}
+            </if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+
+    <delete id="delUserById" parameterType="Integer">
+        delete  from user where id = #{id}
+    </delete>
+
+    <delete id="delselectedByIds"  >
+        delete from user where id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <insert id="addUser" parameterType="cn.po.User">
+        insert into user (name, gender, age, address, qq, email)values ( #{name}, #{gender}, #{age}, #{address}, #{qq}, #{email})
+    </insert>
+
+    <select id="findUserByUsernameAndPassword" parameterType="String" resultType="cn.po.User">
+        select * from user where username=#{username} and password=#{password}
+
+    </select>
+    <select id="findUserById" parameterType="Integer" resultType="cn.po.User">
+        select * from user where id = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="cn.po.User">
+        update user set name = #{name},gender = #{gender},age = #{age},address = #{address},qq = #{qq},email = #{email} where id = #{id}
+    </update>
+</mapper>
